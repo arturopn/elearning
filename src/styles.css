@@ -1,0 +1,99 @@
+.title {
+    text-align: center;
+    padding: 20px;
+    color: black;
+    font-family: monospace;
+  }
+  
+  .form-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+  }
+  
+  .registration-form {
+    background-color: #fff;
+    padding: 31px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    min-width: 376px;
+  }
+  
+  .form-container .registration-form .input-field.col label {
+    left: 1.75rem;
+  }
+  
+  .form-container .registration-form .select-wrapper input.select-dropdown {
+    border: 1px solid #c7c7c7;
+    padding: 0 10px;
+    width: 93%;
+  }
+  
+  .form-container .registration-form .input-field.col .select-wrapper + label {
+    position: absolute;
+    top: -35px;
+    font-size: 0.8rem;
+    left: 0.75rem;
+  }
+  
+  .form-container .registration-form .select-wrapper label.active,
+  .form-container .registration-form .input-field.col label.active {
+    top: -12px;
+    left: 0.75rem;
+  }
+  
+  .input-field input[type="text"].validate,
+  .input-field input[type="email"].validate,
+  .input-field input[type="password"].validate,
+  .input-field select.validate {
+    border: 1px solid #c7c7c7;
+    padding: 20px 12px;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    -webkit-transition: 0.2s border-color, 0.2s box-shadow; /* Added box-shadow transition */
+    -moz-transition: 0.2s border-color, 0.2s box-shadow; /* Added box-shadow transition */
+    -o-transition: 0.2s border-color, 0.2s box-shadow; /* Added box-shadow transition */
+    -ms-transition: 0.2s border-color, 0.2s box-shadow; /* Added box-shadow transition */
+    transition: 0.2s border-color, 0.2s box-shadow; /* Added box-shadow transition */
+    background-color: #fff;
+    background-image: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #696969;
+  }
+  
+  .input-field input[type="text"].validate:focus,
+  .input-field input[type="email"].validate:focus,
+  .input-field input[type="password"].validate:focus,
+  .input-field select.validate:focus {
+    border-color: #c7c7c7;
+    box-shadow: 0 0 0 1px #c7c7c7, 0 2px 4px rgba(0, 0, 0, 0.2); /* Added box-shadow */
+  }
+  
+  .btn-create-account {
+    background: -webkit-linear-gradient(
+      right,
+      #95ca3e 0%,
+      #95ca3e 50%,
+      #85c638 100%
+    );
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+    font-family: lato, sans-serif;
+  }
+  
+  .buttonInput {
+    text-align: center;
+  }
+  
