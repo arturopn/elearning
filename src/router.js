@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm.vue';
 import HomePage from './components/HomePage.vue';
 import CreateThemeForm from './components/CreateThemeForm.vue';
 import CategoryForm from './components/CategoryForm.vue';
+import ContentForm from './components/ContentForm.vue';
 import { ref } from 'vue';
 
 const isAuthenticated = ref(localStorage.getItem('token') !== null);
@@ -35,6 +36,11 @@ const routes = [
   {
     path: '/create-category',
     component: CategoryForm,
+    meta: { requiresAuth: true, allowedRoles: ['creador', 'admin'] },
+  },
+  {
+    path: '/create-content',
+    component: ContentForm,
     meta: { requiresAuth: true, allowedRoles: ['creador', 'admin'] },
   },
 ];

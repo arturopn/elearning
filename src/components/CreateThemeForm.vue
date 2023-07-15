@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavigationBar />
     <h4 class="title">Create New Theme</h4>
 
     <div class="form-container">
@@ -75,6 +76,8 @@
 </template>
 
 <script>
+import NavigationBar from "./NavigationBar.vue";
+
 export default {
   name: "CreateThemeForm",
   data() {
@@ -85,6 +88,9 @@ export default {
       allowVideos: false,
       allowTexts: false,
     };
+  },
+  components: {
+    NavigationBar,
   },
   methods: {
     async createTheme() {

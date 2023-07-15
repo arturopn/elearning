@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavigationBar />
     <h4 class="title">Create New Category</h4>
 
     <div class="form-container">
@@ -47,8 +48,12 @@
 </template>
 
 <script>
+import NavigationBar from "./NavigationBar.vue";
 export default {
   name: "CategoryForm",
+  components: {
+    NavigationBar,
+  },
   data() {
     return {
       categoryName: "",
@@ -58,8 +63,11 @@ export default {
     async createCategory() {
       try {
         const formData = new FormData();
+        console.log(this.categoryName);
+        console.log(this.$refs.coverImage.files[0]);
         formData.append("name", this.categoryName);
         formData.append("coverImage", this.$refs.coverImage.files[0]);
+        console.log(Array.from(formData.entries()));
 
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
         const response = await this.$axios.post(
