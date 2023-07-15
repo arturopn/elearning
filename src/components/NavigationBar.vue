@@ -11,6 +11,12 @@
             <router-link to="/create-theme" class="Header-link"
               >Crear Tema</router-link
             >
+            <router-link to="/create-content" class="Header-link"
+              >Crear Contenido</router-link
+            >
+            <router-link to="/create-category" class="Header-link"
+              >Crear Categoría</router-link
+            >
             <router-link to="/logout" class="Header-link" @click="logout"
               >Salir</router-link
             >

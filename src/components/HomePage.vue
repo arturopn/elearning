@@ -38,13 +38,7 @@
             {{ selectedContent.text }}
           </div>
           <div v-else-if="selectedContent.type === 'video'">
-            <iframe
-              width="560"
-              height="315"
-              :src="selectedContent.videoUrl"
-              frameborder="0"
-              allowfullscreen
-            ></iframe>
+            <div v-html="getEmbeddedVideo(selectedContent.videoUrl)"></div>
           </div>
           <div v-else-if="selectedContent.type === 'image'">
             <img
@@ -107,6 +101,22 @@ export default {
     },
     getImageUrl(filePath) {
       return `http://localhost:3000/${filePath}`;
+    },
+    getEmbeddedVideo(videoUrl) {
+      const videoId = this.extractVideoId(videoUrl);
+      return `
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/${videoId}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        `;
+    },
+    extractVideoId(videoUrl) {
+      const urlParams = new URLSearchParams(new URL(videoUrl).search);
+      return urlParams.get("v");
     },
   },
 };
