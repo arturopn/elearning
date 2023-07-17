@@ -114,7 +114,8 @@ export default {
         );
 
         // Handle successful registration
-        console.log(response.data); // You can customize this part according to your needs
+        console.log(response.data);
+        this.$router.push("/home");
       } catch (error) {
         // Handle registration error
         if (error.response && error.response.status === 400) {
