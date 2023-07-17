@@ -1,56 +1,50 @@
 <template>
   <div>
     <NavigationBar />
-    <h2>Content List</h2>
 
-    <!-- Content Count Cards -->
-    <div class="content-count">
-      <!-- Content count cards code here -->
+    <div class="container">
+      <h2>Content List</h2>
+
+      <div class="search-bar">
+        <input
+          type="text"
+          v-model="searchTerm"
+          @input="searchContents"
+          placeholder="Search content"
+        />
+      </div>
+
+      <!-- Content Count Cards -->
+      <div class="content-count">
+        <!-- Content count cards code here -->
+      </div>
+
+      <!-- Content Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Credits</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="content in sortedContents" :key="content.id">
+            <td>{{ content.type }}</td>
+            <td>{{ content.credits }}</td>
+            <td>
+              <button class="eye-icon" @click="openModal(content)">
+                <i class="material-icons">remove_red_eye</i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <!-- Content Table -->
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Credits</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="content in sortedContents" :key="content.id">
-          <td>{{ content.type }}</td>
-          <td>{{ content.credits }}</td>
-          <td>
-            <button class="eye-icon" @click="openModal(content)">
-              <i class="material-icons">remove_red_eye</i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
 
     <!-- Modal -->
     <div class="modal" :class="{ 'modal-open': isModalOpen }">
-      <div class="modal-content">
-        <div v-if="selectedContent !== null">
-          <div v-if="selectedContent.type === 'text'">
-            {{ selectedContent.text }}
-          </div>
-          <div v-else-if="selectedContent.type === 'video'">
-            <div v-html="getEmbeddedVideo(selectedContent.videoUrl)"></div>
-          </div>
-          <div v-else-if="selectedContent.type === 'image'">
-            <img
-              :src="getImageUrl(selectedContent.filePath)"
-              alt="Content Image"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="modal-close btn">Close</button>
-      </div>
+      <!-- Modal content here -->
     </div>
   </div>
 </template>
@@ -69,6 +63,7 @@ export default {
       sortedContents: [],
       isModalOpen: false,
       selectedContent: null,
+      searchTerm: "",
     };
   },
   mounted() {
@@ -83,45 +78,78 @@ export default {
             Authorization: `${token}`,
           },
         });
-        console.log(response.data);
         this.contents = response.data;
-        this.sortedContents = this.sortContentsByDate(this.contents);
+        this.sortAndFilterContents();
       } catch (error) {
         console.error(error);
       }
     },
-    sortContentsByDate(contents) {
-      return contents.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
+    sortAndFilterContents() {
+      this.sortedContents = this.contents
+        .filter((content) => {
+          const searchRegex = new RegExp(this.searchTerm, "i");
+          return searchRegex.test(content.type);
+        })
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    },
+    searchContents() {
+      this.sortAndFilterContents();
     },
     openModal(content) {
       this.selectedContent = content;
       this.isModalOpen = true;
-    },
-    getImageUrl(filePath) {
-      return `http://localhost:3000/${filePath}`;
-    },
-    getEmbeddedVideo(videoUrl) {
-      const videoId = this.extractVideoId(videoUrl);
-      return `
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/${videoId}"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-        `;
-    },
-    extractVideoId(videoUrl) {
-      const urlParams = new URLSearchParams(new URL(videoUrl).search);
-      return urlParams.get("v");
     },
   },
 };
 </script>
 
 <style scoped>
-/* Styles here */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.eye-icon {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.eye-icon:hover {
+  color: #555;
+}
+
+.eye-icon i {
+  font-size: 1.5rem;
+}
+
+.modal {
+  /* Modal styles here */
+}
 </style>

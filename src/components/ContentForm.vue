@@ -26,7 +26,7 @@
           </div>
           <div class="row">
             <div class="input-field col s12">
-              <label>Content Type</label>
+              <label id="contentTypeLabel">Content Type</label>
               <div class="content-type">
                 <label>
                   <input type="radio" v-model="contentType" value="image" />
@@ -46,7 +46,7 @@
           <div v-if="contentType === 'image'" class="row">
             <div class="input-field col s12">
               <input type="file" id="image" ref="image" class="validate" />
-              <label for="image">Upload Image</label>
+              <label id="uploadImageLabel" for="image">Upload Image</label>
             </div>
           </div>
           <div v-if="contentType === 'video'" class="row">
@@ -142,7 +142,9 @@ export default {
           payload.append("file", "");
           payload.append("videoUrl", "");
         }
-        console.log(payload);
+        for (const entry of payload.entries()) {
+          console.log(entry);
+        }
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
         const response = await this.$axios.post(
           "http://localhost:3000/contents",
@@ -150,7 +152,7 @@ export default {
           {
             headers: {
               Authorization: `${token}`,
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/json",
             },
           }
         );
@@ -170,5 +172,4 @@ export default {
   },
 };
 </script>
-
 <style scoped src="../styles.css"></style>
