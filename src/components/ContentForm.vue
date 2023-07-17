@@ -5,7 +5,11 @@
 
     <div class="form-container">
       <div class="row">
-        <form @submit.prevent="createContent" class="col s12 registration-form">
+        <form
+          @submit.prevent="createContent"
+          class="col s12 registration-form"
+          enctype="multipart/form-data"
+        >
           <div class="row">
             <div class="input-field col s12">
               <label for="theme">Theme</label>
@@ -26,7 +30,7 @@
           </div>
           <div class="row">
             <div class="input-field col s12">
-              <label>Content Type</label>
+              <label id="contentTypeLabel">Content Type</label>
               <div class="content-type">
                 <label>
                   <input type="radio" v-model="contentType" value="image" />
@@ -46,7 +50,7 @@
           <div v-if="contentType === 'image'" class="row">
             <div class="input-field col s12">
               <input type="file" id="image" ref="image" class="validate" />
-              <label for="image">Upload Image</label>
+              <label id="uploadImageLabel" for="image">Upload Image</label>
             </div>
           </div>
           <div v-if="contentType === 'video'" class="row">
@@ -122,40 +126,70 @@ export default {
 
     async createContent() {
       try {
-        const payload = new FormData();
+        const payload = {};
 
-        payload.append("type", this.contentType);
-        payload.append("themeId", this.selectedThemeId);
-        payload.append("userId", 2); // Replace with the actual user ID
-        payload.append("credits", 0);
+        payload.type = this.contentType;
+        payload.themeId = this.selectedThemeId;
+        payload.userId = 2; // Replace with the actual user ID
+        payload.credits = 0;
 
         if (this.contentType === "image") {
-          payload.append("file", this.$refs.image.files[0]);
-          payload.append("videoUrl", "");
-          payload.append("textContent", "");
-        } else if (this.contentType === "video") {
-          payload.append("videoUrl", this.videoUrl);
-          payload.append("textContent", "");
-          payload.append("file", "");
-        } else if (this.contentType === "text") {
-          payload.append("textContent", this.textContent);
-          payload.append("file", "");
-          payload.append("videoUrl", "");
-        }
-        console.log(payload);
-        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
-        const response = await this.$axios.post(
-          "http://localhost:3000/contents",
-          payload,
-          {
-            headers: {
-              Authorization: `${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+          const formData = new FormData();
+          formData.append("type", this.contentType);
+          formData.append("themeId", this.selectedThemeId);
+          formData.append("userId", 2); // Replace with the actual user ID
+          formData.append("credits", 0);
+          formData.append("file", this.$refs.image.files[0]);
 
-        console.log(response.data);
+          const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+          const response = await this.$axios.post(
+            "http://localhost:3000/contents",
+            formData,
+            {
+              headers: {
+                Authorization: `${token}`,
+                "Content-Type": "multipart/form-data", // Set the Content-Type header to multipart form data
+              },
+            }
+          );
+
+          console.log(response.data);
+        } else if (this.contentType === "video") {
+          payload.videoUrl = this.videoUrl;
+          payload.textContent = "";
+
+          const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+          const response = await this.$axios.post(
+            "http://localhost:3000/contents",
+            payload,
+            {
+              headers: {
+                Authorization: `${token}`,
+                "Content-Type": "application/json", // Set the Content-Type header to JSON
+              },
+            }
+          );
+
+          console.log(response.data);
+        } else if (this.contentType === "text") {
+          payload.textContent = this.textContent;
+          payload.file = "";
+          payload.videoUrl = "";
+
+          const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+          const response = await this.$axios.post(
+            "http://localhost:3000/contents",
+            payload,
+            {
+              headers: {
+                Authorization: `${token}`,
+                "Content-Type": "application/json", // Set the Content-Type header to JSON
+              },
+            }
+          );
+
+          console.log(response.data);
+        }
 
         // Reset the form fields after submitting
         this.selectedThemeId = "";
@@ -170,5 +204,4 @@ export default {
   },
 };
 </script>
-
 <style scoped src="../styles.css"></style>
