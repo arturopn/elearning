@@ -74,6 +74,11 @@
               <label for="textContent">Text Content</label>
             </div>
           </div>
+          <div v-if="errorMessage" class="row">
+            <div class="input-field col s12 error-message">
+              {{ errorMessage }}
+            </div>
+          </div>
           <div class="row">
             <div class="input-field col s12 buttonInput">
               <button
@@ -101,6 +106,7 @@ export default {
       contentType: "image",
       videoUrl: "",
       textContent: "",
+      errorMessage: "",
     };
   },
   components: {
@@ -112,10 +118,10 @@ export default {
   methods: {
     async fetchThemes() {
       try {
-        const token = localStorage.getItem("token"); // Retrieve the access token from localStorage
+        const token = localStorage.getItem("token");
         const response = await this.$axios.get("http://localhost:3000/themes", {
           headers: {
-            Authorization: `${token}`, // Include the access token in the Authorization header
+            Authorization: `${token}`,
           },
         });
         this.themes = response.data;
@@ -141,14 +147,14 @@ export default {
           formData.append("credits", 0);
           formData.append("file", this.$refs.image.files[0]);
 
-          const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+          const token = localStorage.getItem("token");
           const response = await this.$axios.post(
             "http://localhost:3000/contents",
             formData,
             {
               headers: {
                 Authorization: `${token}`,
-                "Content-Type": "multipart/form-data", // Set the Content-Type header to multipart form data
+                "Content-Type": "multipart/form-data",
               },
             }
           );
@@ -158,14 +164,14 @@ export default {
           payload.videoUrl = this.videoUrl;
           payload.textContent = "";
 
-          const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+          const token = localStorage.getItem("token");
           const response = await this.$axios.post(
             "http://localhost:3000/contents",
             payload,
             {
               headers: {
                 Authorization: `${token}`,
-                "Content-Type": "application/json", // Set the Content-Type header to JSON
+                "Content-Type": "application/json",
               },
             }
           );
@@ -176,14 +182,14 @@ export default {
           payload.file = "";
           payload.videoUrl = "";
 
-          const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+          const token = localStorage.getItem("token");
           const response = await this.$axios.post(
             "http://localhost:3000/contents",
             payload,
             {
               headers: {
                 Authorization: `${token}`,
-                "Content-Type": "application/json", // Set the Content-Type header to JSON
+                "Content-Type": "application/json",
               },
             }
           );
@@ -191,17 +197,28 @@ export default {
           console.log(response.data);
         }
 
-        // Reset the form fields after submitting
         this.selectedThemeId = "";
         this.contentType = "image";
         this.videoUrl = "";
         this.textContent = "";
         this.$refs.image.value = null;
+
+        this.errorMessage = "";
       } catch (error) {
         console.error(error);
+        if (error.response && error.response.status === 403) {
+          this.errorMessage = "Content type not allowed for this theme";
+        }
       }
     },
   },
 };
 </script>
 <style scoped src="../styles.css"></style>
+
+<style scoped>
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+</style>
